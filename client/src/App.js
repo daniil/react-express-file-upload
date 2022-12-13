@@ -1,8 +1,25 @@
+import axios from 'axios';
 import './App.css';
 
 function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('imageTitle', e.target.imageTitle.value);
+    formData.append('imageDescription', e.target.imageDescription.value);
+    formData.append('imageFile', e.target.imageFile.files[0]);
+
+    axios
+      .post('http://localhost:5050/upload-image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(console.log);
   }
 
   return (
