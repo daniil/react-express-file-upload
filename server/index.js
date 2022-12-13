@@ -2,12 +2,17 @@ const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
 const multer = require('multer');
+const { v4: uuid } = require('uuid');
 const app = express();
 const PORT = 5050 || process.env.PORT;
 
-const readImages = () => {
+const readImagesFile = () => {
   const images = fs.readFileSync('./data/images.json', 'utf-8');
   return JSON.parse(images);
+}
+
+const writeImagesFile = (content) => {
+  fs.writeFileSync('./data/images.json', JSON.stringify(content));
 }
 
 const storage = multer.diskStorage({
@@ -30,8 +35,16 @@ app.use(cors({
 }));
 
 app.post('/upload-image', upload.single('imageFile'), (req, res) => {
-  console.log(req.body)
-  console.log(req.file)
+  const images = readImagesFile();
+  const newImage = {
+    id: uuid(),
+    title: req.body.imageTitle,
+    description: req.body.imageDescription,
+    src: `/images/${req.file.filename}`
+  };
+  images.unshift(newImage);
+  writeImagesFile(images);
+  res.status(201).json(newImage);
 });
 
 app.listen(PORT, () => {
