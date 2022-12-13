@@ -1,8 +1,8 @@
 const express = require('express');
-const fs = require('fs');
 const cors = require('cors');
 const multer = require('multer');
 const { v4: uuid } = require('uuid');
+const { readImagesFile, writeImagesFile } = require('./utils/jsonUtils');
 const app = express();
 const PORT = 5050 || process.env.PORT;
 
@@ -11,15 +11,6 @@ app.use(cors({
 }));
 
 app.use(express.static('public'));
-
-const readImagesFile = () => {
-  const images = fs.readFileSync('./data/images.json', 'utf-8');
-  return JSON.parse(images);
-}
-
-const writeImagesFile = (content) => {
-  fs.writeFileSync('./data/images.json', JSON.stringify(content));
-}
 
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
