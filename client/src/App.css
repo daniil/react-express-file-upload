@@ -4,26 +4,6 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
-input,
-button,
-textarea {
-  font-family: 'Source Sans Pro', sans-serif;
-}
-
-label,
-input,
-textarea {
-  display: block;
-}
-
 .app {
   padding: 0 2rem;
-}
-
-.input-element {
-  margin-bottom: 1.5rem;
-}
-
-.input-element__label {
-  margin-bottom: 0.25rem;
 }
