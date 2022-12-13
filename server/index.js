@@ -6,6 +6,12 @@ const { v4: uuid } = require('uuid');
 const app = express();
 const PORT = 5050 || process.env.PORT;
 
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
+
+app.use(express.static('public'));
+
 const readImagesFile = () => {
   const images = fs.readFileSync('./data/images.json', 'utf-8');
   return JSON.parse(images);
@@ -26,11 +32,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-app.use(express.static('/public'));
-app.use(cors({
-  origin: 'http://localhost:3000'
-}));
-
 app.post('/upload-image', upload.single('imageFile'), (req, res) => {
   const images = readImagesFile();
   const newImage = {
@@ -42,6 +43,11 @@ app.post('/upload-image', upload.single('imageFile'), (req, res) => {
   images.unshift(newImage);
   writeImagesFile(images);
   res.status(201).json(newImage);
+});
+
+app.get('/image-gallery', (_req, res) => {
+  const images = readImagesFile();
+  res.status(200).json(images);
 });
 
 app.listen(PORT, () => {

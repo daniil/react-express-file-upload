@@ -1,0 +1,23 @@
+.image-gallery {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.image {
+  margin: 0;
+  flex-basis: 150px;
+}
+
+.image img {
+  width: 100%;
+}
+
+.image h3 {
+  margin: 0.25rem 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.image figcaption {
+  font-size: 0.9rem;
+}

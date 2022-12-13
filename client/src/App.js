@@ -1,7 +1,25 @@
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import ImageGallery from './ImageGallery';
 import './App.css';
 
 function App() {
+  const [isUploading, setIsUploading] = useState(false);
+  const [images, setImages] = useState([]);
+
+  const fetchImages = () => {
+    axios
+      .get('http://localhost:5050/image-gallery')
+      .then(res => {
+        setImages(res.data);
+      })
+      .catch(console.log);
+  }
+
+  useEffect(() => {
+    fetchImages();
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -10,16 +28,23 @@ function App() {
     formData.append('imageDescription', e.target.imageDescription.value);
     formData.append('imageFile', e.target.imageFile.files[0]);
 
+    setIsUploading(true);
+
     axios
       .post('http://localhost:5050/upload-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
-      .then(res => {
-        console.log(res.data);
+      .then(() => {
+        setIsUploading(false);
+        fetchImages();
+        e.target.reset();
       })
-      .catch(console.log);
+      .catch((err) => {
+        console.log('Error:', err);
+        setIsUploading(false);
+      });
   }
 
   return (
@@ -54,10 +79,15 @@ function App() {
             required
           />
         </div>
-        <button>
+        <button disabled={isUploading}>
           Upload Image
         </button>
       </form>
+      {
+        images.length ? (
+          <ImageGallery images={images}/>
+        ) : null
+      }
     </div>
   );
 }

@@ -1,0 +1,23 @@
+import './ImageGallery.css';
+
+const ImageGallery = ({ images }) => {
+  return (
+    <section className="image-gallery">
+      {images.map(image => {
+        return (
+          <figure className="image" key={image.id}>
+            <img
+              src={`http://localhost:5050${image.src}`}
+              alt={image.description}
+            />
+            <h3>{image.title}</h3>
+            <figcaption>{image.description}</figcaption>
+          </figure>
+        )
+      })}
+    </section>
+    
+  );
+};
+
+export default ImageGallery;
