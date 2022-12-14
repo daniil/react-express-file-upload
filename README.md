@@ -35,3 +35,27 @@ The application has extensive comments throughout to help make sense of the flow
 - For `multer` methods, the argument passed in, ie: `imageFile` in `upload.single('imageFile')` needs to match the `FormData` key coming from the front-end
 - After request data is processed via `multer`, the text data will be available via `req.body` while files via `req.file` (for single) or `req.files` (for multiple)
 - The file parameter will have the original file name available as `originalname` and final filename after upload as `filename`
+
+## Running the Application
+
+The application is broken down into two separate apps, each in individual folder: `client` and `server`.
+
+### `client`
+
+This is the Front-End React Application.
+
+Run `npm install` inside the folder to install the dependencies.
+
+To start the application run `npm start`.
+
+A good starting point for app discovery is `/src/App.js`.
+
+### `server`
+
+This is the Back-End Express Application.
+
+Run `npm install` inside the folder to install the dependencies.
+
+To start the application in dev mode, run `npm run dev`.
+
+A good starting point for app discovery is `index.js`.
