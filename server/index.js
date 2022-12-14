@@ -6,12 +6,17 @@ const { readImagesFile, writeImagesFile } = require('./utils/jsonUtils');
 const app = express();
 const PORT = 5050 || process.env.PORT;
 
+// Allow requests from client-side
 app.use(cors({
   origin: 'http://localhost:3000'
 }));
 
+// Set /public folder as static folder that will serve images as http://localhost:5050/images/imageName.jpg
 app.use(express.static('public'));
 
+// Setup multer config:
+// - destination: where to save the uploaded images
+// - filename: rename the file to be unique, ie: '1671042397477-imageName.jpg'
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
     cb(null, 'public/images');
@@ -21,18 +26,32 @@ const storage = multer.diskStorage({
   },
 });
 
+// Create an upload method passing in the config from above
 const upload = multer({ storage });
 
+// File upload endpoint, using multer instance .single method as a middleware to upload the file.
+// The parameter ('imageFile') needs to match the value of the name attribute of the file input on front-end
 app.post('/upload-image', upload.single('imageFile'), (req, res) => {
+  // Read images JSON file
   const images = readImagesFile();
+
+  // Create new image object
+  // Text fields are available under req.body
+  // File object is available under req.file (or req.files if using upload.array)
   const newImage = {
     id: uuid(),
     title: req.body.imageTitle,
     description: req.body.imageDescription,
-    src: `/images/${req.file.filename}`
+    src: `images/${req.file.filename}`
   };
+
+  // Add new image object to the front of array
   images.unshift(newImage);
+
+  // Update the images JSON file with new value
   writeImagesFile(images);
+
+  // Respond back with new image object
   res.status(201).json(newImage);
 });
 

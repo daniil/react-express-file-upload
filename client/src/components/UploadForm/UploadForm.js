@@ -3,18 +3,27 @@ import axios from 'axios';
 import './UploadForm.css';
 
 const UploadForm = ({ fetchImages }) => {
+  // State for keeping track of upload happening, helpful for disabling the button when submitting the form
   const [isUploading, setIsUploading] = useState(false);
 
   const handleSubmit = (e) => {
+    // Prevent page reload
     e.preventDefault();
 
+    // We need to gather all the data in FormData, not just a regular object
     const formData = new FormData();
+
+    // Getting values from the text fields inputs
     formData.append('imageTitle', e.target.imageTitle.value);
     formData.append('imageDescription', e.target.imageDescription.value);
+
+    // Getting a value from the file input
     formData.append('imageFile', e.target.imageFile.files[0]);
 
+    // Disable the upload button while we are in process of uploading
     setIsUploading(true);
 
+    // Make a POST request with the FormData, need to include multipart/form-data as a header to send the file data
     axios
       .post('http://localhost:5050/upload-image', formData, {
         headers: {
@@ -22,8 +31,13 @@ const UploadForm = ({ fetchImages }) => {
         }
       })
       .then(() => {
+        // Enable the upload button
         setIsUploading(false);
+        
+        // Refetch the images
         fetchImages();
+
+        // Reset the form values
         e.target.reset();
       })
       .catch((err) => {
@@ -62,6 +76,7 @@ const UploadForm = ({ fetchImages }) => {
             required
           />
         </div>
+        {/* The button is disabled while we're uploading */}
         <button disabled={isUploading}>
           Upload Image
         </button>
